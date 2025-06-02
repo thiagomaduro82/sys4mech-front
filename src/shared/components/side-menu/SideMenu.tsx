@@ -1,7 +1,9 @@
-import { Avatar, Box, Divider, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from "@mui/material";
 import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
+
 import { useDrawerContext } from "../../contexts/DrawerContext";
 import { useAppThemeContext } from "../../contexts";
+import logo from '../../../assets/images/logo.png';
 
 interface ISideMenuProps {
     children: React.ReactNode;
@@ -47,9 +49,8 @@ export const SideMenu: React.FC<ISideMenuProps> = ({ children }) => {
             <Drawer variant={smDown ? 'temporary' : 'permanent'} open={isOpen} onClose={toggleDrawer}>
                 <Box width={theme.spacing(28)} height={'100%'} display={'flex'} flexDirection={'column'} >
                     <Box width={'100%'} height={theme.spacing(20)} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-                        <Avatar>Sys4Mech</Avatar>
+                        <img src={logo} alt="Logo" style={{ width: '80%', height: 'auto' }} />
                     </Box>
-                    <Divider />
                     <Box flex={1} >
                         <List component={'nav'} >
                             {drawerOptions.map(drawerOptions => (

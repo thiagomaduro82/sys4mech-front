@@ -5,10 +5,11 @@ import { useDrawerContext } from "../contexts/DrawerContext";
 interface IBasicLayoutProps {
     children: React.ReactNode;
     title: string;
+    icon: string;
     toolbar?: React.ReactNode;
 }
 
-export const BasicLayout: React.FC<IBasicLayoutProps> = ({ children, title, toolbar }) => {
+export const BasicLayout: React.FC<IBasicLayoutProps> = ({ children, title, toolbar, icon }) => {
 
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -17,17 +18,22 @@ export const BasicLayout: React.FC<IBasicLayoutProps> = ({ children, title, tool
 
     return (
         <Box height={'100%'} display={'flex'} flexDirection={'column'} gap={1}>
-            <Box padding={1} display={'flex'} height={theme.spacing(smDown ? 6 : mdDown ? 8 : 12)} alignItems={'center'} gap={1}>
+            <Box padding={1} display={'flex'} height={theme.spacing(smDown ? 4 : mdDown ? 6 : 8)} alignItems={'center'}
+                gap={2} borderBottom={`1px solid ${theme.palette.divider}`}>
                 {smDown && (
                     <IconButton onClick={toggleDrawer}>
-                        <Icon>menu§</Icon>
+                        <Icon>menu</Icon>
                     </IconButton>
                 )}
+                <Icon fontSize={smDown ? 'small' : mdDown ? 'medium' : 'large'} color="primary">
+                    {icon}
+                </Icon>
                 <Typography
-                    variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
+                    variant={smDown ? 'h6' : mdDown ? 'h5' : 'h4'}
                     whiteSpace={'nowrap'}
                     overflow={'hidden'}
                     textOverflow={'ellipsis'}
+                    color="primary"
                 >
                     {title}
                 </Typography>
