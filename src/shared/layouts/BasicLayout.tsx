@@ -18,14 +18,13 @@ export const BasicLayout: React.FC<IBasicLayoutProps> = ({ children, title, tool
 
     return (
         <Box height={'100%'} display={'flex'} flexDirection={'column'} gap={1}>
-            <Box padding={1} display={'flex'} height={theme.spacing(smDown ? 4 : mdDown ? 6 : 8)} alignItems={'center'}
-                gap={2} borderBottom={`1px solid ${theme.palette.divider}`}>
+            <Box padding={1} display={'flex'} height={theme.spacing(smDown ? 4 : mdDown ? 6 : 8)} alignItems={'center'} gap={2} >
                 {smDown && (
                     <IconButton onClick={toggleDrawer}>
                         <Icon>menu</Icon>
                     </IconButton>
                 )}
-                <Icon fontSize={smDown ? 'small' : mdDown ? 'medium' : 'large'} color="primary">
+                <Icon fontSize={smDown ? 'small' : mdDown ? 'medium' : 'large'} sx={{color: "gray"}}>
                     {icon}
                 </Icon>
                 <Typography
@@ -33,7 +32,7 @@ export const BasicLayout: React.FC<IBasicLayoutProps> = ({ children, title, tool
                     whiteSpace={'nowrap'}
                     overflow={'hidden'}
                     textOverflow={'ellipsis'}
-                    color="primary"
+                    sx={{color: "gray"}}
                 >
                     {title}
                 </Typography>

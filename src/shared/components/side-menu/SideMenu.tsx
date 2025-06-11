@@ -1,5 +1,5 @@
 import { Box, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from "@mui/material";
-import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useDrawerContext } from "../../contexts/DrawerContext";
 import { useAppThemeContext } from "../../contexts";
@@ -19,8 +19,6 @@ interface IListItemLinkProps {
 const ListItemLink: React.FC<IListItemLinkProps> = ({ label, icon, to, onClick }) => {
 
     const navigate = useNavigate();
-    const resolvePath = useResolvedPath(to);
-    const match = useMatch({ path: resolvePath.pathname, end: false });
 
     const handleClick = () => {
         navigate(to);
@@ -28,7 +26,7 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ label, icon, to, onClick }
     };
 
     return (
-        <ListItemButton selected={!!match} onClick={handleClick}>
+        <ListItemButton onClick={handleClick}>
             <ListItemIcon>
                 <Icon>{icon}</Icon>
             </ListItemIcon>
