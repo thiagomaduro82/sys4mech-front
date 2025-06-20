@@ -1,10 +1,13 @@
 import { Api } from '../axios-config';
 import { environment } from "../../../environment";
+import { IPermissionDetail } from '../permission/PermissionService';
 
 
 export interface IRoleDetail {
+    id: number;
     uuid: string;
     name: string;
+    permissions: IPermissionDetail[];
     createdAt: number;
     updatedAt: number;
 };
@@ -37,7 +40,6 @@ const getAll = async (name = '', pageNumber = 0, pageSize = 10, order = 'asc'): 
         }
         return new Error("No data found");
     } catch (error) {
-        console.error("Error fetching roles:", error);
         return new Error("Failed to fetch roles");
     }
 };
@@ -50,7 +52,6 @@ const getByUuid = async (uuid: string): Promise<IRoleDetail | Error> => {
         }
         return new Error("Role not found");
     } catch (error) {
-        console.error("Error fetching role by UUID:", error);
         return new Error("Failed to fetch role by UUID");
     }
 };
@@ -63,7 +64,6 @@ const create = async (role: IRoleDTO): Promise<IRoleDetail | Error> => {
         }
         return new Error("Failed to create role");
     } catch (error) {
-        console.error("Error creating role:", error);
         return new Error("Failed to create role");
     }
 };
@@ -76,7 +76,6 @@ const update = async (uuid: string, role: IRoleDTO): Promise<IRoleDetail | Error
         }
         return new Error("Failed to update role");
     } catch (error) {
-        console.error("Error updating role:", error);
         return new Error("Failed to update role");
     }
 };
@@ -86,7 +85,6 @@ const deleteByUuid = async (uuid: string): Promise<void | Error> => {
         await Api.delete(`${environment.apiUrl}/roles/${uuid}`);
         return;
     } catch (error) {
-        console.error("Error deleting role:", error);
         return new Error("Failed to delete role");
     }
 };

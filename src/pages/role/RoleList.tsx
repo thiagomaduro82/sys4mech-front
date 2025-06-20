@@ -20,16 +20,19 @@ export const RoleList: React.FC = () => {
     const [page, setPage] = useState(1);
     const [openModal, setOpenModal] = useState(false);
     const [selectedUuid, setSelectedUuid] = useState<string | null>(null);
+    const [titleModal, setTitleModal] = useState<string>('');
+    const [typeModal, setTypeModal] = useState<'info' | 'warning' | 'error' | 'success' | 'confirmation'>('info');
+    const [messageModal, setMessageModal] = useState<string>('');
 
     useEffect(() => {
         setIsLoading(true);
-        let pageSize = searchParams?.pageSize || 10;
+        let pageSize = searchParams?.pageSize || 5;
         let order = searchParams?.order.toLowerCase() || 'asc';
         RoleService.getAll(searchParams?.searchFor, (page - 1), pageSize, order)
             .then((response) => {
                 setIsLoading(false);
                 if (response instanceof Error) {
-                    console.error("Error fetching roles:", response.message);
+                    handleOpenModal('error', 'Error fetching roles', response.message, null);
                 } else {
                     setRows(response.content);
                     setTotalCount(response.totalElements);
@@ -38,19 +41,23 @@ export const RoleList: React.FC = () => {
             });
     }, [searchParams, page]);
 
-    const handleOpenModal = (uuid: string) => {
+    const handleOpenModal = (type: 'info' | 'warning' | 'error' | 'success' | 'confirmation',
+        title: string, message: string, uuid: string | null) => {
+        setTypeModal(type);
+        setTitleModal(title);
+        setMessageModal(message);
         setSelectedUuid(uuid);
         setOpenModal(true);
     };
 
     const handleDelete = () => {
         if (selectedUuid) {
-            console.log(`Deleting role with UUID: ${selectedUuid}`);
             RoleService.deleteByUuid(selectedUuid)
                 .then((response) => {
                     if (response instanceof Error) {
-                        console.error("Error deleting role:", response.message);
+                        handleOpenModal('error', 'Error deleting role', response.message, null);
                     } else {
+                        handleOpenModal('success', 'Role deleted successfully', '', null);
                         setRows(prevRows => prevRows.filter(row => row.uuid !== selectedUuid));
                         setTotalCount(prevCount => prevCount - 1);
                     }
@@ -105,7 +112,7 @@ export const RoleList: React.FC = () => {
                                         </IconButton>
 
                                         <IconButton size="small" color="error" title="Delete record"
-                                            onClick={() => handleOpenModal(row.uuid)}>
+                                            onClick={() => handleOpenModal("confirmation", "Delete role", "Are you sure you want to delete this role? This operation cannot be undone!", row.uuid)}>
                                             <DeleteIcon fontSize="inherit" />
                                         </IconButton>
                                     </TableCell>
@@ -140,10 +147,11 @@ export const RoleList: React.FC = () => {
             </Box>
             <ModalDialog
                 open={openModal}
-                type="confirmation"
-                title="Confirm Deletion"
-                message="Are you sure you want to delete this role?"
+                type={typeModal}
+                title={titleModal}
+                message={messageModal}
                 onClose={handleCloseModal}
+                onCancel={handleCloseModal}
                 onConfirm={handleDelete}
             />
         </BasicLayout>

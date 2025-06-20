@@ -3,6 +3,7 @@ import { environment } from "../../../environment";
 
 
 export interface IPermissionDetail {
+    id: number;
     uuid: string;
     name: string;
     description: string;
@@ -40,6 +41,18 @@ const getAll = async (field = '', value = '', pageNumber = 0, pageSize = 10, ord
         return new Error("No data found");
     } catch (error) {
         return new Error("Failed to fetch permissions");
+    }
+};
+
+const getAllList = async (): Promise<IPermissionDetail[] | Error> => {
+    try {
+        const { data } = await Api.get(`${environment.apiUrl}/permissions/list`);
+        if (data) {
+            return data;
+        }
+        return new Error("No permissions found");
+    } catch (error) {
+        return new Error("Failed to fetch permissions list");
     }
 };
 
@@ -88,4 +101,4 @@ const deleteByUuid = async (uuid: string): Promise<void | Error> => {
     }
 };
 
-export const PermissionService = { getAll, getByUuid, create, update, deleteByUuid };
+export const PermissionService = { getAll, getByUuid, create, update, deleteByUuid, getAllList };

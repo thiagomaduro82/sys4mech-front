@@ -34,6 +34,7 @@ export const PermissionDetail: React.FC = () => {
                 setIsLoading(false);
                 if (result instanceof Error) {
                     handleOpenModal('error', 'Error displaying permission data', '');
+                    navigate('/permissions');
                 } else {
                     setPermission(result);
                     formRef.current?.setData(result);

@@ -55,8 +55,9 @@ export const PermissionList: React.FC = () => {
             PermissionService.deleteByUuid(selectedUuid)
                 .then((response) => {
                     if (response instanceof Error) {
-                        console.error("Error deleting permission:", response.message);
+                        handleOpenModal('error', 'Error deleting permission', response.message, null);
                     } else {
+                        handleOpenModal('success', 'Permission deleted successfully', '', null);
                         setRows(prevRows => prevRows.filter(row => row.uuid !== selectedUuid));
                         setTotalCount(prevCount => prevCount - 1);
                     }
