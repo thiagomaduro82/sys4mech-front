@@ -16,20 +16,23 @@ export const PermissionList: React.FC = () => {
     const [searchParams, setSearchParams] = useState<ISearchParams>();
     const [totalCount, setTotalCount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [openModal, setOpenModal] = useState(false);
     const [selectedUuid, setSelectedUuid] = useState<string | null>(null);
+    const [titleModal, setTitleModal] = useState<string>('');
+    const [typeModal, setTypeModal] = useState<'info' | 'warning' | 'error' | 'success' | 'confirmation'>('info');
+    const [messageModal, setMessageModal] = useState<string>('');
 
     useEffect(() => {
         setIsLoading(true);
-        let pageSize = searchParams?.pageSize || 10;
+        let pageSize = searchParams?.pageSize || 5;
         let order = searchParams?.order.toLowerCase() || 'asc';
         PermissionService.getAll(searchParams?.field, searchParams?.searchFor, (page - 1), pageSize, order)
             .then((response) => {
                 setIsLoading(false);
                 if (response instanceof Error) {
-                    console.error("Error fetching permissions:", response.message);
+                    handleOpenModal('error', 'Error fetching permissions', response.message, null);
                 } else {
                     setRows(response.content);
                     setTotalCount(response.totalElements);
@@ -38,7 +41,11 @@ export const PermissionList: React.FC = () => {
             });
     }, [searchParams, page]);
 
-    const handleOpenModal = (uuid: string) => {
+    const handleOpenModal = (type: 'info' | 'warning' | 'error' | 'success' | 'confirmation',
+        title: string, message: string, uuid: string | null) => {
+        setTypeModal(type);
+        setTitleModal(title);
+        setMessageModal(message);
         setSelectedUuid(uuid);
         setOpenModal(true);
     };
@@ -106,7 +113,7 @@ export const PermissionList: React.FC = () => {
                                         </IconButton>
 
                                         <IconButton size="small" color="error" title="Delete record"
-                                            onClick={() => handleOpenModal(row.uuid)}>
+                                            onClick={() => handleOpenModal("confirmation", "Delete permission", "Are you sure you want to delete this permission? This operation cannot be undone!", row.uuid)}>
                                             <DeleteIcon fontSize="inherit" />
                                         </IconButton>
                                     </TableCell>
@@ -141,10 +148,11 @@ export const PermissionList: React.FC = () => {
             </Box>
             <ModalDialog
                 open={openModal}
-                type="confirmation"
-                title="Confirm Deletion"
-                message="Are you sure you want to delete this permission?"
+                type={typeModal}
+                title={titleModal}
+                message={messageModal}
                 onClose={handleCloseModal}
+                onCancel={handleCloseModal}
                 onConfirm={handleDelete}
             />
         </BasicLayout>

@@ -52,12 +52,12 @@ export const ModalDialog: React.FC<IModalDialogProps> = ({
                 </DialogContent>
                 <DialogActions>
                     {(type === 'confirmation') && (
-                        <Button onClick={onClose} variant={'contained'} color={'info'}>
+                        <Button onClick={onCancel} variant={'contained'} color={'info'}>
                             Cancel
                         </Button>
                     )}
                     {(type !== 'confirmation') && (
-                        <Button onClick={onCancel} color="primary" variant="contained">
+                        <Button onClick={onClose} color="primary" variant="contained">
                             Close
                         </Button>
                     )}

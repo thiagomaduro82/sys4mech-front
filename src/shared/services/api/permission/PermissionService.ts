@@ -25,9 +25,9 @@ const getAll = async (field = '', value = '', pageNumber = 0, pageSize = 10, ord
     try {
         let urlRelative;
         if (field === undefined || field === null || field === '') {
-            urlRelative = environment.apiUrl + `/permissions?page=${pageNumber}&size=${pageSize}&order=${order}`;
+            urlRelative = environment.apiUrl + `/permissions?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}`;
         } else {
-            urlRelative = environment.apiUrl + `/permissions?field=${field}&value=${value}&page=${pageNumber}&size=${pageSize}&order=${order}`;
+            urlRelative = environment.apiUrl + `/permissions?field=${field}&value=${value}&pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}`;
         };
         const { data } = await Api.get(urlRelative);
         if (data) {
