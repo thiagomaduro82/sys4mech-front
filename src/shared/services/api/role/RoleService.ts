@@ -44,6 +44,18 @@ const getAll = async (name = '', pageNumber = 0, pageSize = 10, order = 'asc'): 
     }
 };
 
+const getAllList = async (): Promise<IRoleDetail[] | Error> => {
+    try {
+        const { data } = await Api.get(`${environment.apiUrl}/roles/list`);
+        if (data) {
+            return data;
+        }
+        return new Error("No roles found");
+    } catch (error) {
+        return new Error("Failed to fetch roles list");
+    }
+};
+
 const getByUuid = async (uuid: string): Promise<IRoleDetail | Error> => {
     try {
         const { data } = await Api.get(`${environment.apiUrl}/roles/${uuid}`);
@@ -89,4 +101,4 @@ const deleteByUuid = async (uuid: string): Promise<void | Error> => {
     }
 };
 
-export const RoleService = { getAll, getByUuid, create, update, deleteByUuid };
+export const RoleService = { getAll, getAllList, getByUuid, create, update, deleteByUuid };

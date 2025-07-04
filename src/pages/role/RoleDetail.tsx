@@ -49,7 +49,6 @@ export const RoleDetail: React.FC = () => {
                     handleOpenModal('error', 'Error displaying permission data', '');
                     navigate('/roles');
                 } else {
-                    console.log(response);
                     setRole(response);
                     setRows(response.permissions || []);
                     formRef.current?.setData(response);
@@ -301,7 +300,7 @@ export const RoleDetail: React.FC = () => {
                                     fullWidth
                                     labelId="label-select-permission"
                                     id="select-permission"
-                                    label="Page size"
+                                    label="Permission"
                                     value={permissionId}
                                     onChange={e => setPermissionId(e.target.value === "" ? null : Number(e.target.value))}
                                 >

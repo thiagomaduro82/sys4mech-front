@@ -3,3 +3,5 @@ export * from './role/RoleList';
 export * from './role/RoleDetail';
 export * from './permission/PermissionList';
 export * from './permission/PermissionDetail';
+export * from './user/UserList';
+export * from './user/UserDetail';
