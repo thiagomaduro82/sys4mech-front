@@ -10,6 +10,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 import { IPermissionDetail, PermissionService } from "../../shared/services/api/permission/PermissionService";
 import { IRolePermissions, RolePermissionsService } from "../../shared/services/api/role-premissions/RolePermissionsService";
 import { grey } from "@mui/material/colors";
+import { LOCAL_STORAGE_TOKEN_KEY, useAuthContext } from "../../shared/contexts";
 
 interface IFormData {
     name: string;
@@ -39,6 +40,8 @@ export const RoleDetail: React.FC = () => {
     const [typeModal, setTypeModal] = useState<'info' | 'warning' | 'error' | 'success' | 'confirmation'>('info');
     const [messageModal, setMessageModal] = useState<string>('');
     const [openModal, setOpenModal] = useState(false);
+
+    const { refreshPermissions } = useAuthContext();
 
     useEffect(() => {
         if (uuid && uuid !== 'create') {
@@ -125,6 +128,9 @@ export const RoleDetail: React.FC = () => {
                         if (!(response instanceof Error)) {
                             setRole(response);
                             setRows(response.permissions || []);
+                            const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
+                            const parsedToken = storedToken ? JSON.parse(storedToken) : undefined;
+                            refreshPermissions(parsedToken || '');
                         }
                     });
                 }
@@ -178,6 +184,33 @@ export const RoleDetail: React.FC = () => {
                 }
             })
         }
+    };
+
+    const handleDeleteRolePermission = (roleId: number, permissionId: number) => {
+        RolePermissionsService.getRolePermission(roleId, permissionId).then(result => {
+            if (result instanceof Error) {
+                handleOpenModal('error', 'Error fetching role permission', result.message);
+            } else {
+                RolePermissionsService.deleteRolePermission(result.id || 0).then(deleteResult => {
+                    if (deleteResult instanceof Error) {
+                        handleOpenModal('error', 'Error deleting role permission', deleteResult.message);
+                    } else {
+                        if (role?.uuid) {
+                            RoleService.getByUuid(role.uuid).then((response) => {
+                                if (!(response instanceof Error)) {
+                                    setRole(response);
+                                    setRows(response.permissions || []);
+                                    const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
+                                    const parsedToken = storedToken ? JSON.parse(storedToken) : undefined;
+                                    refreshPermissions(parsedToken || '');
+                                }
+                            });
+                        }
+                        handleOpenModal('success', 'Role permission deleted successfully', '');
+                    }
+                });
+            }
+        });
     };
 
     return (
@@ -236,16 +269,28 @@ export const RoleDetail: React.FC = () => {
                                         <Table size="small" aria-label="a dense table" >
                                             <TableHead sx={{ backgroundColor: grey[900] }}>
                                                 <TableRow>
-                                                    <TableCell sx={{ color: grey[50] }}>Permissions</TableCell>
+                                                    <TableCell sx={{ color: grey[50] }}>Permissions description</TableCell>
+                                                    <TableCell sx={{ color: grey[50] }}>Name</TableCell>
                                                     <TableCell sx={{ color: grey[50], width: "100px", textAlign: "center" }}>Actions</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
                                                 {rows.map(row => (
                                                     <TableRow key={row.uuid}>
+                                                        <TableCell>{row.description}</TableCell>
                                                         <TableCell>{row.name}</TableCell>
                                                         <TableCell sx={{ textAlign: "center" }}>
-                                                            <IconButton size="small" color="error" title="Delete record" onClick={() => handleDelete(row.uuid)}>
+                                                            <IconButton
+                                                                size="small"
+                                                                color="error"
+                                                                title="Delete record"
+                                                                onClick={() => {
+                                                                    if (role) {
+                                                                        handleDeleteRolePermission(role.id, row.id);
+                                                                    }
+                                                                }}
+                                                                disabled={!role}
+                                                            >
                                                                 <Icon>delete</Icon>
                                                             </IconButton>
                                                         </TableCell>

@@ -17,6 +17,23 @@ const createRolePermission = async (rolePermission: IRolePermissions): Promise<I
     }
 }
 
+const getRolePermission = async (roleId: number, permissionId: number): Promise<IRolePermissions | Error> => {
+    try {
+        const { data } = await Api.get(`${environment.apiUrl}/role-permissions?roleId=${roleId}&permissionId=${permissionId}`);
+        return data;
+    } catch (error) {
+        return new Error("Failed to fetch role permission");
+    }
+}
+
+const deleteRolePermission = async (id: number): Promise<void | Error> => {
+    try {
+        await Api.delete(`${environment.apiUrl}/role-permissions/${id}`);
+    } catch (error) {
+        return new Error("Failed to delete role permission");
+    }
+}
+
 export const RolePermissionsService = {
-    createRolePermission
+    createRolePermission, getRolePermission, deleteRolePermission
 };

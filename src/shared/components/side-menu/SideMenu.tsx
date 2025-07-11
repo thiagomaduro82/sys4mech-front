@@ -2,7 +2,7 @@ import { Box, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, us
 import { useNavigate } from "react-router-dom";
 
 import { useDrawerContext } from "../../contexts/DrawerContext";
-import { useAppThemeContext } from "../../contexts";
+import { useAppThemeContext, useAuthContext } from "../../contexts";
 import logo from '../../../assets/images/logo.png';
 
 interface ISideMenuProps {
@@ -41,6 +41,7 @@ export const SideMenu: React.FC<ISideMenuProps> = ({ children }) => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const { isOpen, toggleDrawer, drawerOptions } = useDrawerContext();
     const { toggleTheme } = useAppThemeContext();
+    const { logout } = useAuthContext();
 
     return (
         <>
@@ -69,6 +70,12 @@ export const SideMenu: React.FC<ISideMenuProps> = ({ children }) => {
                                     <Icon>brightness_6</Icon>
                                 </ListItemIcon>
                                 <ListItemText primary="Toggle Theme" />
+                            </ListItemButton>
+                            <ListItemButton onClick={logout}>
+                                <ListItemIcon>
+                                    <Icon>logout</Icon>
+                                </ListItemIcon>
+                                <ListItemText primary="Logout" />
                             </ListItemButton>
                         </List>
                     </Box>

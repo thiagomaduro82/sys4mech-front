@@ -68,9 +68,9 @@ const getByUuid = async (uuid: string): Promise<IPermissionDetail | Error> => {
     }
 };
 
-const create = async (role: IPermissionDTO): Promise<IPermissionDetail | Error> => {
+const create = async (permission: IPermissionDTO): Promise<IPermissionDetail | Error> => {
     try {
-        const { data } = await Api.post(`${environment.apiUrl}/permissions`, role);
+        const { data } = await Api.post(`${environment.apiUrl}/permissions`, permission);
         if (data) {
             return data;
         }

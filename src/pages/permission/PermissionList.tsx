@@ -8,8 +8,12 @@ import { Box, Button, Icon, IconButton, LinearProgress, Pagination, Paper, Table
 import { grey } from "@mui/material/colors";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { useHasPermission } from "../../shared/hooks";
 
 export const PermissionList: React.FC = () => {
+
+    const canWritePermissions = useHasPermission('PERMISSION_WRITE');
+    const canDeletePermissions = useHasPermission('PERMISSION_DELETE');
 
     const navigate = useNavigate();
     const [rows, setRows] = useState<IPermissionDetail[]>([]);
@@ -82,7 +86,7 @@ export const PermissionList: React.FC = () => {
                 onClickSearchButton={params => { setSearchParams(params); setPage(1); }}
             />}>
             <Box component={Paper} sx={{ p: 1, m: 1, width: 'auto' }}>
-                <Button
+                {canWritePermissions && <Button
                     color="primary"
                     variant="contained"
                     startIcon={<Icon>add</Icon>}
@@ -92,7 +96,7 @@ export const PermissionList: React.FC = () => {
                     onClick={() => navigate('/permissions/detail/create')}
                 >
                     New
-                </Button>
+                </Button>}
                 <TableContainer>
                     <Table size="small" aria-label="a dense table">
                         <TableHead sx={{ backgroundColor: grey[900] }}>
@@ -108,15 +112,15 @@ export const PermissionList: React.FC = () => {
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.description}</TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        <IconButton size="small" color="info" sx={{ marginRight: 1 }} title="Edit record"
+                                        {canWritePermissions && <IconButton size="small" color="info" sx={{ marginRight: 1 }} title="Edit record"
                                             onClick={() => navigate(`/permissions/detail/${row.uuid}`)}>
                                             <EditNoteIcon fontSize="inherit" />
-                                        </IconButton>
+                                        </IconButton>}
 
-                                        <IconButton size="small" color="error" title="Delete record"
+                                        {canDeletePermissions && <IconButton size="small" color="error" title="Delete record"
                                             onClick={() => handleOpenModal("confirmation", "Delete permission", "Are you sure you want to delete this permission? This operation cannot be undone!", row.uuid)}>
                                             <DeleteIcon fontSize="inherit" />
-                                        </IconButton>
+                                        </IconButton>}
                                     </TableCell>
                                 </TableRow>
                             ))}
