@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDrawerContext } from "../shared/contexts/DrawerContext";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail, EmployeeList, EmployeeDetail } from "../pages";
+import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail, EmployeeList, EmployeeDetail, CustomerList, CustomerDetail } from "../pages";
 import { useHasPermission } from "../shared/hooks";
 
 export const AppRoutes = () => {
@@ -26,6 +26,9 @@ export const AppRoutes = () => {
         if (canViewEmployees) {
             drawerOptions.push({ label: 'Employee', icon: 'person_3', path: '/employees' });
         }
+        if (canViewCustomers) {
+            drawerOptions.push({ label: 'Customers', icon: 'peoples', path: '/customers' });
+        }
         if (canViewRoles) {
             drawerOptions.push({ label: 'Roles', icon: 'shield', path: '/roles' });
         }
@@ -34,9 +37,6 @@ export const AppRoutes = () => {
         }
         if (canViewUsers) {
             drawerOptions.push({ label: 'User', icon: 'person', path: '/users' });
-        }
-        if (canViewCustomers) {
-            drawerOptions.push({ label: 'Customers', icon: 'peoples', path: '/permissions' });
         }
         if (canViewServices) {
             drawerOptions.push({ label: 'Services', icon: 'handyman', path: '/permissions' });
@@ -73,6 +73,8 @@ export const AppRoutes = () => {
             {(canViewUsers) && <Route path="/users/detail/:uuid" element={<UserDetail />} />}
             {(canViewEmployees) && <Route path="/employees" element={<EmployeeList />} />}
             {(canViewEmployees) && <Route path="/employees/detail/:uuid" element={<EmployeeDetail />} />}
+            {(canViewCustomers) && <Route path="/customers" element={<CustomerList />} />}
+            {(canViewCustomers) && <Route path="/customers/detail/:uuid" element={<CustomerDetail />} />}
             {(canViewHome) && <Route path="*" element={<Navigate to={'/'} />} />}
         </Routes>
     );

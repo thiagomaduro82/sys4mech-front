@@ -7,3 +7,5 @@ export * from './user/UserList';
 export * from './user/UserDetail';
 export * from './employee/EmployeeList';
 export * from './employee/EmployeeDetail';
+export * from './customer/CustomerList';
+export * from './customer/CustomerDetail';
