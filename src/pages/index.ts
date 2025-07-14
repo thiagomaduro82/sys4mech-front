@@ -5,3 +5,5 @@ export * from './permission/PermissionList';
 export * from './permission/PermissionDetail';
 export * from './user/UserList';
 export * from './user/UserDetail';
+export * from './employee/EmployeeList';
+export * from './employee/EmployeeDetail';

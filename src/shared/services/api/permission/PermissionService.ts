@@ -80,9 +80,9 @@ const create = async (permission: IPermissionDTO): Promise<IPermissionDetail | E
     }
 };
 
-const update = async (uuid: string, role: IPermissionDTO): Promise<IPermissionDetail | Error> => {
+const update = async (uuid: string, permission: IPermissionDTO): Promise<IPermissionDetail | Error> => {
     try {
-        const { data } = await Api.put(`${environment.apiUrl}/permissions/${uuid}`, role);
+        const { data } = await Api.put(`${environment.apiUrl}/permissions/${uuid}`, permission);
         if (data) {
             return data;
         }

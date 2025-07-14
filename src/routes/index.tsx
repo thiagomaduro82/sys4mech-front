@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDrawerContext } from "../shared/contexts/DrawerContext";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail } from "../pages";
+import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail, EmployeeList, EmployeeDetail } from "../pages";
 import { useHasPermission } from "../shared/hooks";
 
 export const AppRoutes = () => {
@@ -23,6 +23,9 @@ export const AppRoutes = () => {
         if (canViewHome) {
             drawerOptions.push({ label: 'Home', icon: 'home', path: '/' });
         }
+        if (canViewEmployees) {
+            drawerOptions.push({ label: 'Employee', icon: 'person_3', path: '/employees' });
+        }
         if (canViewRoles) {
             drawerOptions.push({ label: 'Roles', icon: 'shield', path: '/roles' });
         }
@@ -31,9 +34,6 @@ export const AppRoutes = () => {
         }
         if (canViewUsers) {
             drawerOptions.push({ label: 'User', icon: 'person', path: '/users' });
-        }
-        if (canViewEmployees) {
-            drawerOptions.push({ label: 'Employee', icon: 'person_3', path: '/permissions' });
         }
         if (canViewCustomers) {
             drawerOptions.push({ label: 'Customers', icon: 'peoples', path: '/permissions' });
@@ -71,6 +71,8 @@ export const AppRoutes = () => {
             {(canViewPermissions) && <Route path="/permissions/detail/:uuid" element={<PermissionDetail />} />}
             {(canViewUsers) && <Route path="/users" element={<UserList />} />}
             {(canViewUsers) && <Route path="/users/detail/:uuid" element={<UserDetail />} />}
+            {(canViewEmployees) && <Route path="/employees" element={<EmployeeList />} />}
+            {(canViewEmployees) && <Route path="/employees/detail/:uuid" element={<EmployeeDetail />} />}
             {(canViewHome) && <Route path="*" element={<Navigate to={'/'} />} />}
         </Routes>
     );
