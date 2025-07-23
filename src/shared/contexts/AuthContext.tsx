@@ -27,7 +27,11 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const refreshPermissions = useCallback(async (token: string) => {
         const perms = await AuthService.getMyPermissions(token);
         setPermissions(Array.isArray(perms) ? perms : []);
-    }, []);
+        if (permissions.length === 0) {
+            setToken(undefined);
+            localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
+        }
+    }, [permissions.length]);
 
     useEffect(() => {
         const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
@@ -37,6 +41,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
             AuthService.getMyPermissions(parsedToken).then((response) => {
                 if (response instanceof Error) {
                     console.error("Failed to fetch permissions:", response.message);
+                    setToken(undefined);
+                    localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
                 } else {
                     setPermissions(response);
                 }
@@ -74,7 +80,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             isAuthenticated, login: handleLogin,
-            logout: handleLogout, permissions: permissionList, 
+            logout: handleLogout, permissions: permissionList,
             loading: isLoading, refreshPermissions
         }}>
             {children}

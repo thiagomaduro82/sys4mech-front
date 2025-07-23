@@ -1,5 +1,6 @@
 import { Api } from '../axios-config';
 import { environment } from "../../../environment";
+import { ICustomerCarsDetail } from '../customer-cars/CustomerCarsService';
 
 
 export interface ICustomerDetail {
@@ -15,6 +16,7 @@ export interface ICustomerDetail {
     country: string;
     dateOfBirth: Date;
     phone: string;
+    cars: ICustomerCarsDetail[];
     createdAt: number;
     updatedAt: number;
 };
