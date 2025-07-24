@@ -1,6 +1,7 @@
 import { Api } from '../axios-config';
 import { environment } from "../../../environment";
-
+import axios from "axios";
+import { LOCAL_STORAGE_TOKEN_KEY } from '../../../contexts';
 
 export interface IPermissionDetail {
     id: number;
@@ -22,6 +23,10 @@ type TPermissionList = {
     totalPages: number;
 };
 
+const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
+const token = storedToken ? JSON.parse(storedToken) : undefined;
+const headers = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+
 const getAll = async (field = '', value = '', pageNumber = 0, pageSize = 10, order = 'asc'): Promise<TPermissionList | Error> => {
     try {
         let urlRelative;
@@ -30,7 +35,7 @@ const getAll = async (field = '', value = '', pageNumber = 0, pageSize = 10, ord
         } else {
             urlRelative = environment.apiUrl + `/permissions?field=${field}&value=${value}&pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}`;
         };
-        const { data } = await Api.get(urlRelative);
+        const { data } = await Api.get(urlRelative, headers);
         if (data) {
             return {
                 content: data.content,
@@ -40,63 +45,117 @@ const getAll = async (field = '', value = '', pageNumber = 0, pageSize = 10, ord
         }
         return new Error("No data found");
     } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 403) {
+                return new Error("You do not have permission to access this information.");
+            }
+            if (error.response.status === 401) {
+                return new Error("Your session has expired. Please log in again.");
+            }
+            return new Error(`Erro ${error.response.status}: ${error.response.statusText}`);
+        }
         return new Error("Failed to fetch permissions");
     }
 };
 
 const getAllList = async (): Promise<IPermissionDetail[] | Error> => {
     try {
-        const { data } = await Api.get(`${environment.apiUrl}/permissions/list`);
+        const { data } = await Api.get(`${environment.apiUrl}/permissions/list`, headers);
         if (data) {
             return data;
         }
         return new Error("No permissions found");
     } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 403) {
+                return new Error("You do not have permission to access this information.");
+            }
+            if (error.response.status === 401) {
+                return new Error("Your session has expired. Please log in again.");
+            }
+            return new Error(`Erro ${error.response.status}: ${error.response.statusText}`);
+        }
         return new Error("Failed to fetch permissions list");
     }
 };
 
 const getByUuid = async (uuid: string): Promise<IPermissionDetail | Error> => {
     try {
-        const { data } = await Api.get(`${environment.apiUrl}/permissions/${uuid}`);
+        const { data } = await Api.get(`${environment.apiUrl}/permissions/${uuid}`, headers);
         if (data) {
             return data;
         }
         return new Error("Permission not found");
     } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 403) {
+                return new Error("You do not have permission to access this information.");
+            }
+            if (error.response.status === 401) {
+                return new Error("Your session has expired. Please log in again.");
+            }
+            return new Error(`Erro ${error.response.status}: ${error.response.statusText}`);
+        }
         return new Error("Failed to fetch permission by UUID");
     }
 };
 
 const create = async (permission: IPermissionDTO): Promise<IPermissionDetail | Error> => {
     try {
-        const { data } = await Api.post(`${environment.apiUrl}/permissions`, permission);
+        const { data } = await Api.post(`${environment.apiUrl}/permissions`, permission, headers);
         if (data) {
             return data;
         }
         return new Error("Failed to create permission");
     } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 403) {
+                return new Error("You do not have permission to access this information.");
+            }
+            if (error.response.status === 401) {
+                return new Error("Your session has expired. Please log in again.");
+            }
+            return new Error(`Erro ${error.response.status}: ${error.response.statusText}`);
+        }
         return new Error("Failed to create permission");
     }
 };
 
 const update = async (uuid: string, permission: IPermissionDTO): Promise<IPermissionDetail | Error> => {
     try {
-        const { data } = await Api.put(`${environment.apiUrl}/permissions/${uuid}`, permission);
+        const { data } = await Api.put(`${environment.apiUrl}/permissions/${uuid}`, permission, headers);
         if (data) {
             return data;
         }
         return new Error("Failed to update permission");
     } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 403) {
+                return new Error("You do not have permission to access this information.");
+            }
+            if (error.response.status === 401) {
+                return new Error("Your session has expired. Please log in again.");
+            }
+            return new Error(`Erro ${error.response.status}: ${error.response.statusText}`);
+        }
         return new Error("Failed to update permission");
     }
 };
 
 const deleteByUuid = async (uuid: string): Promise<void | Error> => {
     try {
-        await Api.delete(`${environment.apiUrl}/permissions/${uuid}`);
+        await Api.delete(`${environment.apiUrl}/permissions/${uuid}`, headers);
         return;
     } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 403) {
+                return new Error("You do not have permission to access this information.");
+            }
+            if (error.response.status === 401) {
+                return new Error("Your session has expired. Please log in again.");
+            }
+            return new Error(`Erro ${error.response.status}: ${error.response.statusText}`);
+        }
         return new Error("Failed to delete permission");
     }
 };

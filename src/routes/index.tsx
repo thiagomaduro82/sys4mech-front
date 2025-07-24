@@ -16,7 +16,7 @@ export const AppRoutes = () => {
     const canViewServices = useHasPermission('SERVICE_READ');
     const canViewCarParts = useHasPermission('CAR_PARTS_READ');
     const canViewServiceOrders = useHasPermission('SERVICE_ORDERS_READ');
-    const canViewHome = useHasPermission('HOME_READ');
+    const canViewHome = useHasPermission('HOME_VIEW');
 
     useEffect(() => {
         const drawerOptions = [];
