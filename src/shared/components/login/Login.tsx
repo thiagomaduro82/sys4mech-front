@@ -36,12 +36,8 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
         setIsLoading(true);
         loginSchema.validate({ email, password }, { abortEarly: false })
             .then(async (validData) => {
-                await login(validData).then((response) => {
-                    setIsLoading(false);
-                    if (response instanceof Error) {
-                        alert(response.message);
-                    }
-                });
+                await login(validData);
+                setIsLoading(false);
             })
             .catch((errors: yup.ValidationError) => {
                 setIsLoading(false);

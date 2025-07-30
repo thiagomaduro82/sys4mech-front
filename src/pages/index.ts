@@ -9,3 +9,5 @@ export * from './employee/EmployeeList';
 export * from './employee/EmployeeDetail';
 export * from './customer/CustomerList';
 export * from './customer/CustomerDetail';
+export * from './service/ServiceList';
+export * from './service/ServiceDetail';

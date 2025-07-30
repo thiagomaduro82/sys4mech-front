@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDrawerContext } from "../shared/contexts/DrawerContext";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail, EmployeeList, EmployeeDetail, CustomerList, CustomerDetail } from "../pages";
+import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail, EmployeeList, EmployeeDetail, CustomerList, CustomerDetail, ServiceList, ServiceDetail } from "../pages";
 import { useHasPermission } from "../shared/hooks";
 
 export const AppRoutes = () => {
@@ -29,6 +29,9 @@ export const AppRoutes = () => {
         if (canViewCustomers) {
             drawerOptions.push({ label: 'Customers', icon: 'peoples', path: '/customers' });
         }
+        if (canViewServices) {
+            drawerOptions.push({ label: 'Services', icon: 'handyman', path: '/services' });
+        }
         if (canViewRoles) {
             drawerOptions.push({ label: 'Roles', icon: 'shield', path: '/roles' });
         }
@@ -38,14 +41,11 @@ export const AppRoutes = () => {
         if (canViewUsers) {
             drawerOptions.push({ label: 'User', icon: 'person', path: '/users' });
         }
-        if (canViewServices) {
-            drawerOptions.push({ label: 'Services', icon: 'handyman', path: '/permissions' });
-        }
         if (canViewCarParts) {
-            drawerOptions.push({ label: 'Car Parts', icon: 'car_crash', path: '/permissions' });
+            drawerOptions.push({ label: 'Car Parts', icon: 'car_crash', path: '/car-parts' });
         }
         if (canViewServiceOrders) {
-            drawerOptions.push({ label: 'Service Order', icon: 'car_repair', path: '/permissions' });
+            drawerOptions.push({ label: 'Service Order', icon: 'car_repair', path: '/service-orders' });
         }
         
         setDrawerOptions(drawerOptions);
@@ -75,6 +75,8 @@ export const AppRoutes = () => {
             {(canViewEmployees) && <Route path="/employees/detail/:uuid" element={<EmployeeDetail />} />}
             {(canViewCustomers) && <Route path="/customers" element={<CustomerList />} />}
             {(canViewCustomers) && <Route path="/customers/detail/:uuid" element={<CustomerDetail />} />}
+            {(canViewServices) && <Route path="/services" element={<ServiceList />} />}
+            {(canViewServices) && <Route path="/services/detail/:uuid" element={<ServiceDetail />} />}
             {(canViewHome) && <Route path="*" element={<Navigate to={'/'} />} />}
         </Routes>
     );
