@@ -13,3 +13,5 @@ export * from './service/ServiceList';
 export * from './service/ServiceDetail';
 export * from './supplier/SupplierList';
 export * from './supplier/SupplierDetail';
+export * from './car-part/CarPartList';
+export * from './car-part/CarPartDetail';

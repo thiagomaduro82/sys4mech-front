@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDrawerContext } from "../shared/contexts/DrawerContext";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail, EmployeeList, EmployeeDetail, CustomerList, CustomerDetail, ServiceList, ServiceDetail, SupplierList, SupplierDetail } from "../pages";
+import { Home, RoleList, PermissionList, PermissionDetail, RoleDetail, UserList, UserDetail, EmployeeList, EmployeeDetail, CustomerList, CustomerDetail, ServiceList, ServiceDetail, SupplierList, SupplierDetail, CarPartList, CarPartDetail } from "../pages";
 import { useHasPermission } from "../shared/hooks";
 
 export const AppRoutes = () => {
@@ -93,6 +93,8 @@ export const AppRoutes = () => {
             {(canWriteServices) && <Route path="/services/detail/:uuid" element={<ServiceDetail />} />}
             {(canViewSuppliers) && <Route path="/suppliers" element={<SupplierList />} />}
             {(canWriteSuppliers) && <Route path="/suppliers/detail/:uuid" element={<SupplierDetail />} />}
+            {(canViewCarParts) && <Route path="/car-parts" element={<CarPartList />} />}
+            {(canWriteCarParts) && <Route path="/car-parts/detail/:uuid" element={<CarPartDetail />} />}
             {(canViewHome) && <Route path="*" element={<Navigate to={'/'} />} />}
         </Routes>
     );
