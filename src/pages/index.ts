@@ -11,3 +11,5 @@ export * from './customer/CustomerList';
 export * from './customer/CustomerDetail';
 export * from './service/ServiceList';
 export * from './service/ServiceDetail';
+export * from './supplier/SupplierList';
+export * from './supplier/SupplierDetail';

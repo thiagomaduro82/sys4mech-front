@@ -26,15 +26,21 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
     const refreshPermissions = useCallback(async (token: string) => {
         setIsLoading(true);
-        setPermissions([]);
         const perms = await AuthService.getMyPermissions(token);
+        const newPermissions = Array.isArray(perms) ? perms : [];
+        setPermissions(newPermissions);
         setIsLoading(false);
-        setPermissions(Array.isArray(perms) ? perms : []);
-        if (permissions.length === 0) {
+        if (newPermissions.length === 0) {
             setToken(undefined);
             localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
         }
-    }, [permissions.length]);
+    }, []);
+
+    useEffect(() => {
+        if (token) {
+            refreshPermissions(token);
+        }
+    }, [token, refreshPermissions]);
 
     useEffect(() => {
         setIsLoading(true);
