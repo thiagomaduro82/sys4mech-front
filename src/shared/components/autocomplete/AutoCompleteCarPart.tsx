@@ -1,25 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
-import { RoleService } from "../../services/api/role/RoleService";
 import { Autocomplete, TextField } from "@mui/material";
 import { useField } from "@unform/core";
-
+import { CarPartService } from "../../services/api/car-part/CarPartService";
 
 type TAutoCompleteOptions = {
     uuid: string;
     name: string;
+    amount: number;
 };
 
-interface IAutoCompleteRoleProps {
+interface IAutoCompleteCarPartProps {
     isExternalLoading?: boolean;
+    onChange?: (service: TAutoCompleteOptions | null) => void;
 }
 
-export const AutoCompleteRole: React.FC<IAutoCompleteRoleProps> = ({ isExternalLoading = false }) => {
+export const AutoCompleteCarPart: React.FC<IAutoCompleteCarPartProps> = ({ isExternalLoading = false, onChange }) => {
 
-    const { fieldName, registerField, defaultValue, error, clearError} = useField('roleUuid');
+    const { fieldName, registerField, defaultValue, error, clearError} = useField('carPartUuid');
     
     const [options, setOptions] = useState<TAutoCompleteOptions[]>([]);
     const [loading, setLoading] = useState(false);
-    const [search, setSearch] = useState<string>("");
+    const [search, setSearch] = useState<string>('');
     const [selectedUuid, setSelectedUuid] = useState<string | undefined>(defaultValue);
 
     useEffect(() => {
@@ -32,14 +33,16 @@ export const AutoCompleteRole: React.FC<IAutoCompleteRoleProps> = ({ isExternalL
     
     useEffect(() => {
         setLoading(true);
-        RoleService.getAll(search, 1, 10, 'asc').then((result) => {
+        CarPartService.getAll((search === '') ? '': 'name', search, 0, 10, 'asc').then((result) => {
             setLoading(false);
             if (result instanceof Error) {
-                console.error("Error fetching roles:", result.message);
+                console.error("Error fetching car-part:", result.message);
             } else {
-                const formattedOptions = result.content.map(role => ({
-                    uuid: role.uuid,
-                    name: role.name
+                console.log("Fetched car-part:", result.content);
+                const formattedOptions = result.content.map(carPart => ({
+                    uuid: carPart.uuid,
+                    name: carPart.name,
+                    amount: carPart.sellingPrice
                 }));
                 setOptions(formattedOptions);
             }
@@ -60,9 +63,14 @@ export const AutoCompleteRole: React.FC<IAutoCompleteRoleProps> = ({ isExternalL
             disabled={isExternalLoading}
             disablePortal
             onInputChange={(_, newValue) => setSearch(newValue)}
-            renderInput={(params) => <TextField {...params} label="Role" variant="outlined" error={!!error}
+            renderInput={(params) => <TextField {...params} label="Car part" variant="outlined" error={!!error}
             helperText={error}/>}
-            onChange={(_, newValue) => { setSelectedUuid(newValue?.uuid); setSearch(''); clearError(); }}
+            onChange={(_, newValue) => {
+                setSelectedUuid(newValue?.uuid);
+                setSearch('');
+                clearError();
+                if (onChange) onChange(newValue || null);
+            }}
             loading={loading}
             size={'small'}
         />

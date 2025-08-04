@@ -65,6 +65,7 @@ export const AutoCompleteSupplier: React.FC<IAutoCompleteSupplierProps> = ({ isE
             helperText={error}/>}
             onChange={(_, newValue) => { setSelectedUuid(newValue?.uuid); setSearch(''); clearError(); }}
             loading={loading}
+            size={'small'}
         />
     );
 }
